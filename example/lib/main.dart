@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stories_editor/stories_editor.dart';
 
@@ -30,6 +31,27 @@ class Example extends StatefulWidget {
 
 class _ExampleState extends State<Example> {
   @override
+  void initState() {
+    super.initState();
+    checkPermission();
+  }
+
+  Future<void> checkPermission() async {
+    var status = await Permission.manageExternalStorage.status;
+    var statusMedia = await Permission.accessMediaLocation.status;
+    var statusPhoto = await Permission.accessMediaLocation.status;
+    if (status.isDenied) {
+      Permission.manageExternalStorage.request();
+    }
+    if (statusMedia.isDenied) {
+      Permission.accessMediaLocation.request();
+    }
+    if (statusPhoto.isDenied) {
+      Permission.photos.request();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.black,
@@ -41,7 +63,7 @@ class _ExampleState extends State<Example> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => StoriesEditor(
-                            giphyKey: 'API KEY',
+                            giphyKey: '5oLNtn7015Z9BaVyorSmuCtVGEzLU03P',
                             //fontFamilyList: const ['Shizuru', 'Aladin'],
                             galleryThumbnailQuality: 300,
                             //isCustomFontList: true,
